@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simulado de Alto Nível - Lei nº 8.662/1993</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts: Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 3px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+  <!-- BANNER DIGITAL / HEADER -->
+  <header class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 border-b-4 border-amber-500 shadow-2xl relative overflow-hidden">
+    <!-- Grid decorativo de fundo -->
+    <div class="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+    
+    <div class="max-w-6xl mx-auto px-4 py-8 md:py-12 relative z-10 text-center">
+      <div class="inline-flex items-center gap-2 px-3 py-1 bg-amber-500/15 border border-amber-500/30 text-amber-400 rounded-full text-xs font-bold uppercase tracking-wider mb-4 animate-pulse">
+        <i class="fa-solid fa-gavel"></i> Preparação Avançada — Foco em Concursos Públicos
+      </div>
+      <h1 class="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight leading-tight">
+        🏛️ SIMULADO DE <span class="text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-yellow-300">ALTO NÍVEL</span>
+      </h1>
+      <p class="mt-3 text-lg md:text-xl font-bold text-slate-300 uppercase tracking-wide">
+        Serviço Social — Lei nº 8.662/1993
+      </p>
+      <div class="h-1 w-24 bg-gradient-to-r from-amber-500 to-yellow-300 mx-auto mt-4 rounded-full"></div>
+      <p class="mt-4 text-sm md:text-base text-slate-400 max-w-2xl mx-auto font-medium">
+        Regulamentação da Profissão de Assistente Social. Desafie-se com 20 questões complexas e contextualizadas focadas em diferenciar competências, atribuições privativas e o correto exercício profissional.
+      </p>
+
+      <!-- Badges Informativos -->
+      <div class="flex flex-wrap justify-center gap-4 mt-6 text-xs font-semibold text-white">
+        <span class="px-3 py-1.5 bg-slate-800/80 border border-slate-700 rounded-lg flex items-center gap-1.5">
+          <i class="fa-solid fa-list-ol text-amber-400"></i> 20 Questões Autorais
+        </span>
+        <span class="px-3 py-1.5 bg-slate-800/80 border border-slate-700 rounded-lg flex items-center gap-1.5">
+          <i class="fa-solid fa-graduation-cap text-amber-400"></i> Nível Superior Avançado
+        </span>
+        <span class="px-3 py-1.5 bg-slate-800/80 border border-slate-700 rounded-lg flex items-center gap-1.5">
+          <i class="fa-solid fa-file-invoice-dollar text-amber-400"></i> Lei Federal Integral
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- CONTROL BAR -->
+  <section class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+    <div class="max-w-6xl mx-auto px-4 py-3 flex flex-col sm:flex-row justify-between items-center gap-3">
+      <!-- Seletor de Modo -->
+      <div class="flex items-center bg-slate-100 p-1 rounded-xl w-full sm:w-auto">
+        <button id="btn-mode-interactive" onclick="switchMode('interactive')" class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 bg-white text-indigo-950 shadow-sm">
+          <i class="fa-solid fa-laptop-code"></i> Modo Interativo
+        </button>
+        <button id="btn-mode-print" onclick="switchMode('print')" class="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 transition-all duration-200 hover:text-slate-900">
+          <i class="fa-solid fa-print"></i> Modo Estudo / Impressão
+        </button>
+      </div>
+
+      <!-- Estatísticas / Reiniciar (Apenas Visível no Interativo) -->
+      <div id="stats-bar" class="flex items-center justify-between sm:justify-end gap-6 w-full sm:w-auto">
+        <div class="flex items-center gap-4 text-sm font-bold text-slate-700">
+          <span class="flex items-center gap-1"><i class="fa-solid fa-clipboard-check text-indigo-600"></i> <span id="stat-answered">0</span>/20</span>
+          <span class="flex items-center gap-1"><i class="fa-solid fa-circle-check text-emerald-600"></i> <span id="stat-correct" class="text-emerald-600">0</span></span>
+          <span class="flex items-center gap-1"><i class="fa-solid fa-circle-xmark text-rose-600"></i> <span id="stat-wrong" class="text-rose-600">0</span></span>
+        </div>
+        <button onclick="resetQuiz()" class="text-xs bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold px-3 py-2 rounded-lg transition-all flex items-center gap-1.5">
+          <i class="fa-solid fa-rotate-left"></i> Reiniciar
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN CONTENT CONTAINER -->
+  <main class="flex-grow max-w-6xl w-full mx-auto px-4 py-8">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      
+      <!-- ESQUERDA: INDEXADOR DE QUESTÕES (Apenas no Modo Interativo) -->
+      <aside id="sidebar-navigation" class="lg:col-span-1 bg-white p-4 rounded-2xl border border-slate-200 shadow-sm h-fit sticky top-20 hidden lg:block">
+        <h3 class="font-bold text-slate-900 text-sm uppercase tracking-wider mb-3 flex items-center gap-2">
+          <i class="fa-solid fa-compass text-indigo-600"></i> Navegação
+        </h3>
+        <p class="text-xs text-slate-500 mb-4">Clique nos números para acessar diretamente a questão correspondente no simulado.</p>
+        <div class="grid grid-cols-5 gap-2" id="grid-nav">
+          <!-- Gerado dinamicamente via JS -->
+        </div>
+        
+        <div class="mt-6 pt-4 border-t border-slate-100">
+          <div class="text-xs font-semibold text-slate-500 mb-2 flex justify-between">
+            <span>Seu Desempenho</span>
+            <span id="nav-percent">0%</span>
+          </div>
+          <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+            <div id="nav-progress-bar" class="bg-gradient-to-r from-emerald-500 to-indigo-600 h-full w-0 transition-all duration-300"></div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- DIREITA / CENTRAL: LISTA DE QUESTÕES -->
+      <section id="questions-area" class="lg:col-span-3 space-y-8">
+        <!-- As questões serão injetadas dinamicamente aqui -->
+      </section>
+
+    </div>
+
+    <!-- SEÇÃO GABARITO & COMENTÁRIOS (Aparece no Modo Impressão / No final do Interativo) -->
+    <section id="review-section" class="mt-12 bg-white rounded-2xl border border-slate-200 shadow-md p-6 md:p-8 hidden">
+      <div class="text-center mb-8">
+        <h2 class="text-2xl font-black text-slate-900 uppercase tracking-tight">📝 Gabarito & Análise Técnica</h2>
+        <p class="text-slate-500 text-sm mt-1">Confira a resposta correta de todas as questões e a fundamentação jurídica de acordo com a Lei nº 8.662/1993.</p>
+      </div>
+
+      <!-- Tabela Gabarito Compacta -->
+      <div class="grid grid-cols-4 sm:grid-cols-10 gap-2 mb-8" id="gabarito-grid">
+        <!-- Injetado via JS -->
+      </div>
+
+      <div class="border-t border-slate-200 pt-8">
+        <h3 class="text-xl font-bold text-indigo-950 mb-6 flex items-center gap-2">
+          <i class="fa-solid fa-book-open text-amber-500"></i> Comentários Detalhados das Questões
+        </h3>
+        <div id="comentarios-area" class="space-y-6">
+          <!-- Injetado via JS -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-slate-900 border-t border-slate-800 py-8 text-center text-slate-500 text-xs mt-12">
+    <div class="max-w-6xl mx-auto px-4">
+      <p class="font-semibold text-slate-400 mb-2">Simulado Elaborado em Perfeita Conformidade com a Lei Federal nº 8.662/1993.</p>
+      <p>© 2026 Simulado de Alto Nível - Preparação para Carreiras Públicas. Permitida a reprodução para fins de estudo.</p>
+    </div>
+  </footer>
+
+  <!-- SCRIPT CONTENDO OS DADOS E A LÓGICA DO SIMULADO -->
+  <script>
+    // Banco de Dados das Questões (20 Questões Contextualizadas de Nível Superior)
+    const questionsData = [
+      {
+        id: 1,
+        topic: "Competência vs Atribuição Privativa",
+        enunciado: "O Secretário de Assistência Social de um município, com o objetivo de dar celeridade ao cadastramento de famílias vulneráveis para o recebimento de um benefício municipal de transferência de renda, emitiu uma portaria designando uma equipe técnica composta por um assistente administrativo e um psicólogo para realizar estudos socioeconômicos domiciliares. O assistente social da instituição questionou a medida, sob o argumento de que a realização de estudos socioeconômicos para fins de concessão de benefícios sociais violava a reserva técnica de sua profissão. Diante do que determina a Lei nº 8.662/1993 e do entendimento jurídico sobre as prerrogativas profissionais, a iniciativa do Secretário Municipal está respaldada legalmente?",
+        options: [
+          { key: "A", text: "Não, pois o planejamento e a realização de quaisquer estudos de vulnerabilidade social que envolvam levantamento econômico e domiciliar configuram atribuições privativas do assistente social no âmbito da gestão pública.", isCorrect: false },
+          { key: "B", text: "Sim, porque a assistência social é gerida pelo princípio da interdisciplinaridade, permitindo que as atividades operacionais e analíticas de diagnóstico social sejam conduzidas por qualquer profissional de nível superior.", isCorrect: false },
+          { key: "C", text: "Sim, uma vez que a realização de estudos socioeconômicos com os usuários para fins de benefícios e serviços sociais é classificada legalmente como competência do assistente social, não possuindo natureza de atribuição privativa.", isCorrect: true },
+          { key: "D", text: "Não, haja vista que as atribuições privativas compreendem todas as formas de avaliação socioeconômica de populações vulneráveis, sendo vedada a participação de psicólogos nessa análise de benefício.", isCorrect: false },
+          { key: "E", text: "Sim, desde que a portaria municipal seja referendada em plenária pelo respectivo Conselho Municipal de Assistência Social, o qual detém a soberania para readequar atribuições da equipe técnica local.", isCorrect: false }
+        ],
+        hint: "Observe atentamente o rol do Artigo 4º (Competências) e o Artigo 5º (Atribuições Privativas). O termo 'estudos socioeconômicos' aparece no Artigo 4º, Inciso XI.",
+        rationale: "De acordo com o Art. 4º, Inciso XI da Lei nº 8.662/1993, constitui competência do assistente social 'realizar estudos socioeconômicos com os usuários para fins de benefícios e serviços sociais'. Por se tratar de uma competência, a atividade não é exclusiva (privativa) do assistente social, embora o profissional seja plenamente habilitado a realizá-la. Portanto, a designação de outros profissionais para realizar levantamentos econômicos não configura descumprimento de atribuição exclusiva/privativa."
+      },
+      {
+        id: 2,
+        topic: "Supervisão de Estágio Acadêmico",
+        enunciado: "Uma faculdade privada credenciada pelo Ministério da Educação (MEC) oferta o curso de graduação em Serviço Social na modalidade à distância. Ao organizar as atividades de estágio obrigatório de seus estudantes em um Centro de Referência de Assistência Social (CRAS) municipal, a coordenação da instituição de ensino designou um Bacharel em Sociologia para atuar como tutor externo de campo, responsável por acompanhar presencialmente as atividades cotidianas e assinar as folhas de frequência dos alunos, justificando que a avaliação acadêmica final e teórica seria realizada por um assistente social docente da faculdade. Essa modalidade de organização do estágio atende aos requisitos dispostos na legislação profissional do Serviço Social?",
+        options: [
+          { key: "A", text: "Não, uma vez que o treinamento, avaliação e supervisão direta de estagiários de Serviço Social constituem atribuição privativa do assistente social regularmente inscrito, inviabilizando a atuação direta de outras áreas.", isCorrect: true },
+          { key: "B", text: "Sim, desde que as diretrizes do projeto político-pedagógico do curso permitam a interdisciplinaridade na tutoria de campo, contanto que as avaliações teóricas sejam exclusivas de assistente social docente.", isCorrect: false },
+          { key: "C", text: "Sim, porque a legislação exige apenas que o orientador acadêmico da instituição de ensino seja assistente social, delegando o acompanhamento administrativo em campo para profissionais das Ciências Humanas.", isCorrect: false },
+          { key: "D", text: "Não, exceto se o sociólogo responsável possuir especialização na área de políticas públicas de assistência social ou contar com a anuência do conselho municipal de direitos da criança e do adolescente.", isCorrect: false },
+          { key: "E", text: "Sim, pois a Lei nº 8.662/1993 regula somente o exercício profissional no mercado de trabalho formalizado, não incidindo sobre as relações educacionais de estágio de estudantes em formação acadêmica.", isCorrect: false }
+        ],
+        hint: "A supervisão direta em campo envolve orientar e certificar o fazer profissional em ato. Verifique o Art. 5º, Inciso VI da lei.",
+        rationale: "O Art. 5º, Inciso VI, da Lei nº 8.662/1993 estabelece que o 'treinamento, avaliação e supervisão direta de estagiários de Serviço Social' constitui atribuição privativa do assistente social. Dessa forma, é terminantemente proibido que profissionais de outras formações, como a Sociologia, exerçam a supervisão ou acompanhamento direto de campo dos estudantes, configurando irregularidade na operacionalização do estágio."
+      },
+      {
+        id: 3,
+        topic: "Magistério de Serviço Social",
+        enunciado: "Uma renomada universidade pública abriu concurso para preenchimento de vaga de professor adjunto na cadeira de 'Fundamentos Históricos, Teóricos e Metodológicos do Serviço Social'. No edital de abertura, constava que poderiam se inscrever doutores nas áreas de Serviço Social, Sociologia, Ciência Política, História ou Antropologia. O Conselho Regional de Serviço Social (CRESS) da jurisdição impetrou mandado de segurança visando à retificação do edital, alegando afronta à lei de regulamentação profissional da categoria. Com base na Lei nº 8.662/1993, assinale a opção que reflete a correção jurídica da intervenção do CRESS:",
+        options: [
+          { key: "A", text: "A intervenção é indevida, pois as universidades gozam de autonomia constitucional para selecionar docentes de áreas afins com base em critérios amplos de produção acadêmica e titulação de pós-graduação.", isCorrect: false },
+          { key: "B", text: "O edital está correto, pois o magistério superior constitui competência geral e não atribuição privativa, permitindo a concorrência ampla para docentes de disciplinas das Ciências Humanas Aplicadas.", isCorrect: false },
+          { key: "C", text: "O CRESS tem parcial razão apenas quanto à coordenação do curso, cabendo o ensino da cadeira teórica das fundações históricas a qualquer profissional com comprovada experiência em pesquisa social.", isCorrect: false },
+          { key: "D", text: "O CRESS tem total razão, pois assumir o magistério de disciplinas que exijam conhecimentos próprios e adquiridos em curso de formação regular de Serviço Social constitui atribuição privativa do assistente social.", isCorrect: true },
+          { key: "E", text: "A retificação do edital só é aplicável para instituições de ensino privadas, visto que os órgãos de controle profissional não têm jurisdição sobre as contratações do funcionalismo público estatutário.", isCorrect: false }
+        ],
+        hint: "Busque no Art. 5º, Inciso V, a previsão relativa ao exercício do magistério e o tipo de conhecimento exigido pelas disciplinas curriculares de formação regular.",
+        rationale: "Conforme o Art. 5º, Inciso V, da Lei nº 8.662/1993, constitui atribuição privativa do assistente social 'assumir, no magistério de Serviço Social tanto a nível de graduação como pós-graduação, disciplinas e funções que exijam conhecimentos próprios e adquiridos em curso de formação regular'. As disciplinas de 'Fundamentos' exigem esses conhecimentos específicos, sendo exclusivas de assistentes sociais habilitados."
+      },
+      {
+        id: 4,
+        topic: "Formulação e Avaliação de Políticas Sociais",
+        enunciado: "Em uma reunião intersetorial de planejamento governamental, um gestor estadual propõe a criação de uma comissão técnica multidisciplinar (composta por economistas, administradores, psicólogos e assistentes sociais) para formular, implementar e monitorar a nova política de erradicação da extrema pobreza do estado. Um dos assistentes sociais presentes manifestou-se contrariamente à participação de profissionais de outras áreas na comissão de formulação, sob a tese de que a elaboração de políticas de combate à vulnerabilidade social é uma atribuição exclusiva da categoria de Serviço Social. À luz da Lei nº 8.662/1993, a tese do assistente social é:",
+        options: [
+          { key: "A", text: "Correta, pois qualquer ação direta do Estado focada em populações em extrema miséria deve obrigatoriamente ser planejada e coordenada por assistentes sociais, por expressa previsão constitucional.", isCorrect: false },
+          { key: "B", text: "Incorreta, visto que elaborar, implementar, executar e avaliar políticas sociais constitui competência do assistente social, o que significa que o campo é compartilhado e não privativo da categoria.", isCorrect: true },
+          { key: "C", text: "Correta, por se enquadrar como coordenação e direção técnica de programas estatais voltados ao amparo dos direitos civis e sociais, ato privativo estabelecido no art. 5º da lei regulamentadora.", isCorrect: false },
+          { key: "D", text: "Incorreta, porque a lei outorga a elaboração de políticas ao psicólogo, restando ao assistente social apenas a execução técnica e o parecer socioeconômico final na concessão de subsídios públicos.", isCorrect: false },
+          { key: "E", text: "Correta, contanto que o projeto preveja o repasse direto de recursos financeiros de modo centralizado, o que converte o plano social em unidade executiva exclusiva de Serviço Social.", isCorrect: false }
+        ],
+        hint: "As políticas sociais são de interesse geral do Estado e envolvem múltiplos campos de conhecimento técnico. Leia o Art. 4º, Inciso I, e verifique se é competência ou atribuição privativa.",
+        rationale: "Segundo o Art. 4º, Inciso I, da Lei nº 8.662/1993, constitui competência do assistente social 'elaborar, implementar, executar e avaliar políticas sociais junto a órgãos da administração pública, direta ou indireta, empresas, entidades e organizações populares'. Como é uma competência (e não atribuição privativa do Art. 5º), o assistente social compartilha essa função com outros profissionais de nível superior na equipe multidisciplinar."
+      },
+      {
+        id: 5,
+        topic: "Registro Profissional e Título de Analista",
+        enunciado: "Uma assistente social que concluiu a graduação em Serviço Social no ano anterior e obteve o diploma definitivo foi aprovada em concurso público de um tribunal de justiça para o cargo genérico de 'Analista do Judiciário — Especialidade Desenvolvimento Social'. O tribunal dispensou a comprovação de inscrição no CRESS no ato da posse, sob a alegação de que a nomenclatura do cargo era genérica e não exigia de forma expressa no edital o registro profissional. Após denúncia, o CRESS fiscalizou a atuação e constatou que ela emite relatórios sociais e orienta famílias. Nessa situação, considerando a Lei nº 8.662/1993, assinale a conduta juridicamente adequada:",
+        options: [
+          { key: "A", text: "O exercício profissional está regularizado, pois a aprovação em concurso público homologado supre a exigência de inscrição em conselhos profissionais de autarquias federais.", isCorrect: false },
+          { key: "B", text: "A inscrição é facultativa, já que os tribunais de justiça possuem regime estatutário próprio dotado de soberania regulamentar sobre o exercício funcional de seus servidores integrados.", isCorrect: false },
+          { key: "C", text: "A profissional deve suspender as atividades administrativas de relatoria, mantendo apenas a orientação de famílias, atividade que dispensa registro por ter fins meramente pedagógicos.", isCorrect: false },
+          { key: "D", text: "O CRESS não pode exigir o registro profissional, uma vez que a lei federal ampara exclusivamente os cargos cuja nomenclatura oficial seja expressamente rotulada de 'Assistente Social'.", isCorrect: false },
+          { key: "E", text: "A profissional está exercendo a profissão irregularmente, sendo a inscrição no Conselho Regional da respectiva jurisdição condição essencial para o exercício das atividades inerentes ao Serviço Social.", isCorrect: true }
+        ],
+        hint: "A proteção legal da lei 8.662/93 se estende a quem exerce as funções da profissão, independentemente da nomenclatura de cargos genéricos dada pelo empregador. Relembre o Artigo 2º e 3º.",
+        rationale: "Os Artigos 2º e 3º da Lei nº 8.662/1993 deixam claro que o exercício da profissão de Assistente Social exige diploma de graduação e inscrição no CRESS competente. Mesmo sob cargos de nomenclaturas genéricas (como 'Analista de Desenvolvimento Social'), se as atribuições fáticas são inerentes ao Serviço Social, o registro no CRESS é obrigatório e fiscalizável."
+      },
+      {
+        id: 6,
+        topic: "Estudo Social e Perícias Técnicas",
+        enunciado: "Durante um processo judicial de disputa de guarda de menor em uma Vara de Família, o juiz titular proferiu despacho determinando que o psicólogo judicial concursado realizasse, isoladamente, a análise pericial completa da viabilidade sociofamiliar do lar paterno, devendo emitir 'laudo pericial' detalhando a dinâmica habitacional, a rede de apoio comunitária e as condições socioeconômicas da família. A equipe técnica do tribunal, atenta aos limites éticos e profissionais, questionou o despacho. Com fulcro na Lei nº 8.662/1993, qual o correto direcionamento para essa determinação judicial?",
+        options: [
+          { key: "A", text: "O psicólogo deve executar a totalidade da perícia por força do princípio do livre convencimento motivado do juiz, que se sobrepõe a restrições de corporações profissionais.", isCorrect: false },
+          { key: "B", text: "O laudo sobre habitabilidade e situação socioeconômica de familiares pode ser emitido por psicólogos, desde que eles passem por capacitação em visita domiciliar e auditoria de recursos sociais.", isCorrect: false },
+          { key: "C", text: "A emissão de pareceres, laudos periciais e informações sobre matéria de Serviço Social é atribuição privativa do assistente social, sendo ilegal delegar tais instrumentos exclusivos a outras profissões.", isCorrect: true },
+          { key: "D", text: "Trata-se de uma competência concorrente, de modo que o estudo pode ser assinado conjuntamente por psicólogo e assistente social, ou individualmente por qualquer um deles sem distinção técnica.", isCorrect: false },
+          { key: "E", text: "A perícia de dinâmica social é de competência do administrador judicial, competindo ao assistente social somente a elaboração do plano de acolhimento físico do menor destituído da guarda.", isCorrect: false }
+        ],
+        hint: "Estudos sociais, laudos e pareceres que versem sobre matéria e dinâmicas sociais da área do Serviço Social são exclusivos. Busque o Art. 5º, Inciso IV.",
+        rationale: "O Art. 5º, Inciso IV, da Lei nº 8.662/1993 define como atribuição privativa do assistente social 'realizar vistorias, perícias técnicas, laudos periciais, informações e pareceres sobre a matéria de Serviço Social'. A avaliação técnica da viabilidade sociofamiliar é típica matéria de Serviço Social, logo, não pode ser assinada isoladamente por profissionais de outra formação sob pena de usurpação de função privativa."
+      },
+      {
+        id: 7,
+        topic: "Duração do Trabalho e Jornada de 30 Horas",
+        enunciado: "Um assistente social contratado sob o regime da Consolidação das Leis do Trabalho (CLT) por uma fundação de direito privado que atua no acolhimento de idosos assinou contrato prevendo uma jornada semanal de 40 horas de trabalho com salário correspondente a essa carga. Após um ano, o trabalhador pleiteou judicialmente a readequação de sua jornada para 30 horas semanais sem prejuízo de sua remuneração atual, com base na alteração introduzida pela Lei nº 12.317/2010. Em sua defesa, a fundação alegou que o limite de 30 horas semanais não é autoaplicável e dependeria de convenção coletiva de trabalho com o respectivo sindicato. Diante do texto da Lei nº 8.662/1993:",
+        options: [
+          { key: "A", text: "A fundação está correta, pois a jornada de 30 horas semanais só se aplica ao assistente social concursado e inserido exclusivamente na Administração Pública Direta Federal.", isCorrect: false },
+          { key: "B", text: "O trabalhador está amparado pela lei, visto que a duração do trabalho do assistente social é de 30 horas semanais de forma expressa, não condicionada a acordos sindicais ou redução de vencimentos.", isCorrect: true },
+          { key: "C", text: "O limite de horas é opcional, cabendo à instituição filantrópica fixar jornada diferenciada caso comprove insuficiência financeira para a contratação de pessoal substituto.", isCorrect: false },
+          { key: "D", text: "A jornada de 30 horas aplica-se estritamente aos assistentes sociais que exercem cargos de chefia técnica de Serviço Social, mantendo-se 40 horas aos profissionais de atuação operacional básica.", isCorrect: false },
+          { key: "E", text: "A alteração na jornada pela Lei nº 12.317/2010 foi julgada inconstitucional pelo STF por violar a livre iniciativa de pactuação entre empregador e empregado nas atividades privadas.", isCorrect: false }
+        ],
+        hint: "A Lei nº 12.317/2010 acrescentou o Art. 5º-A à Lei nº 8.662/1993. É uma norma jurídica de ordem pública e eficácia imediata no território nacional.",
+        rationale: "De acordo com o Art. 5º-A da Lei nº 8.662/1993 (incluído pela Lei nº 12.317/2010), 'a duração do trabalho do Assistente Social é de 30 (trinta) horas semanais'. A jurisprudência pátria consolidou que essa norma é plenamente autoaplicável aos contratos regidos pela CLT, sendo vedada a redução de salário e nula qualquer cláusula contratual ou acordo coletivo em sentido contrário."
+      },
+      {
+        id: 8,
+        topic: "Assessoria e Consultoria",
+        enunciado: "Uma fundação privada dedicada a assessorar governos estaduais em planos de assistência social contratou um Mestre em Sociologia Política para atuar de forma autônoma como assessor de formulação técnica em matéria de Serviço Social. O profissional recebeu a incumbência de avaliar os processos metodológicos e institucionais das equipes de Serviço Social de vários municípios parceiros. O CRESS interveio alegando que tal atividade configura exercício irregular da profissão por parte do sociólogo. Tomando por base a Lei nº 8.662/1993, assinale a análise correta da situação fática:",
+        options: [
+          { key: "A", text: "A contratação do sociólogo é plenamente lícita, pois assessorar órgãos da administração pública direta ou indireta é uma competência compartilhada do art. 4º, inexistindo a exclusividade em matéria técnica.", isCorrect: false },
+          { key: "B", text: "O CRESS agiu equivocadamente, pois as consultorias científicas são de livre exercício acadêmico por força do direito fundamental à liberdade de cátedra e pesquisa social.", isCorrect: false },
+          { key: "C", text: "O sociólogo pode prestar assessoria técnica à fundação contanto que as análises de viabilidade financeira e orçamentária dos planos sociais sejam delegadas a economistas diplomados.", isCorrect: false },
+          { key: "D", text: "A prestação de assessoria e consultoria a órgãos da administração pública ou entidades privadas em matéria de Serviço Social constitui atribuição privativa do assistente social.", isCorrect: true },
+          { key: "E", text: "A atividade é uma competência privativa das entidades de representação estudantil, cabendo ao CRESS apenas fiscalizar o recolhimento de taxas tributárias de anotação de responsabilidade técnica.", isCorrect: false }
+        ],
+        hint: "Assessoria e consultoria podem constar tanto no Artigo 4º quanto no Artigo 5º, dependendo da especificidade. A expressão chave aqui é 'em matéria de Serviço Social' no Artigo 5º, Inciso III.",
+        rationale: "Conforme o Art. 5º, Inciso III da Lei nº 8.662/1993, constitui atribuição privativa do assistente social a 'assessoria e consultoria a órgãos da Administração Pública direta e indireta, empresas privadas e outras entidades, em matéria de Serviço Social'. Portanto, um sociólogo não pode exercer assessoria quando o objeto técnico é matéria de Serviço Social."
+      },
+      {
+        id: 9,
+        topic: "Planejamento e Organização de Benefícios",
+        enunciado: "Em uma autarquia federal previdenciária, um grupo de trabalho foi criado para reorganizar o fluxo de deferimento automático de benefícios de prestação continuada por meio de ferramentas de inteligência artificial. O diretor da autarquia indicou um Engenheiro de Sistemas para presidir a comissão de reestruturação dos benefícios previdenciários e serviços de assistência. O sindicato representativo dos assistentes sociais questionou a indicação, sob o fundamento de que planejar, organizar e administrar benefícios e serviços de natureza social é uma atribuição privativa e privativa do assistente social, nos termos da lei de regência. À luz da Lei nº 8.662/1993, a alegação sindical é:",
+        options: [
+          { key: "A", text: "Incorreta, haja vista que planejar, organizar e administrar benefícios e serviços sociais constitui competência do assistente social e não atribuição privativa de natureza exclusiva.", isCorrect: true },
+          { key: "B", text: "Correta, pois o art. 5º tipifica a gerência e auditoria de qualquer sistema previdenciário e assistencial público como atividade exclusiva do profissional inscrito no CRESS.", isCorrect: false },
+          { key: "C", text: "Incorreta, haja vista que o planejamento é restrito aos administradores públicos, competindo ao assistente social unicamente o acolhimento direto e operacional dos segurados em fila.", isCorrect: false },
+          { key: "D", text: "Correta, exceto se o engenheiro for assessorado diretamente por equipe multiprofissional contendo pelo menos dois psicólogos e um terapeuta ocupacional habilitados na autarquia.", isCorrect: false },
+          { key: "E", text: "Incorreta, porque o planejamento de benefícios só assume caráter de competência profissional de assistente social quando realizado no âmbito do terceiro setor ou de entidades populares.", isCorrect: false }
+        ],
+        hint: "Cuidado com a redação sutil da lei. Atividades de planejamento administrativo de benefícios gerais pertencem ao Art. 4º, Inciso VI.",
+        rationale: "Segundo o Art. 4º, Inciso VI, da Lei nº 8.662/1993, constitui competência do assistente social 'planejar, organizar e administrar benefícios e Serviços Sociais'. Por ser uma competência, não é uma atividade privativa exclusiva da categoria, permitindo que a administração geral e tecnológica desses benefícios conte com outros profissionais na liderança."
+      },
+      {
+        id: 10,
+        topic: "Direção de Unidades de Ensino de Serviço Social",
+        enunciado: "Uma instituição de ensino superior comunitária resolveu reestruturar o organograma de seu Centro de Ciências Sociais Aplicadas. Para otimizar a gestão financeira e pedagógica dos cursos unificados, a reitoria nomeou uma doutora em Administração Pública para assumir, de forma cumulativa, a Direção Pedagógica e a Coordenação do Curso de Graduação em Serviço Social. O Diretório Acadêmico e os docentes assistentes sociais mobilizaram-se contra a nomeação. Com base nas disposições vigentes da Lei nº 8.662/1993, assinale o fundamento jurídico correto que apoia a mobilização dos docentes:",
+        options: [
+          { key: "A", text: "A nomeação é legal, pois a autonomia universitária assegura o direito de alocação de gestores doutores de quaisquer áreas afins na administração de faculdades sociais.", isCorrect: false },
+          { key: "B", text: "A reitoria agiu em conformidade com a legislação federal, pois a coordenação de cursos de graduação constitui mera competência compartilhada descrita no Artigo 4º.", isCorrect: false },
+          { key: "C", text: "O administrador de empresas é habilitado para gerir as unidades de Serviço Social, desde que delegue a assinatura do Termo de Compromisso de Estágio ao CRESS regional.", isCorrect: false },
+          { key: "D", text: "A nomeação seria ilegal apenas se o curso de graduação estivesse operando sob modalidade exclusivamente presencial, o que não ocorre na modalidade comunitária regulada pelo MEC.", isCorrect: false },
+          { key: "E", text: "A nomeação é ilegal, pois dirigir e coordenar Unidades de Ensino e Cursos de Serviço Social, de graduação e pós-graduação, constitui atribuição privativa do assistente social.", isCorrect: true }
+        ],
+        hint: "Unidades de ensino acadêmico e cursos de formação profissional em Serviço Social possuem regras rígidas de direção em sua legislação específica. Consulte o Art. 5º, Inciso VII.",
+        rationale: "Conforme o Art. 5º, Inciso VII, da Lei nº 8.662/1993, constitui atribuição privativa do assistente social 'dirigir e coordenar Unidades de Ensino e Cursos de Serviço Social, de graduação e pós-graduação'. A nomeação de um administrador para coordenar o curso de Serviço Social viola diretamente este dispositivo federal."
+      },
+      {
+        id: 11,
+        topic: "Fiscalização Profissional pelo CRESS",
+        enunciado: "No exercício de sua missão legal de controle do exercício da profissão, uma agente fiscal do CRESS compareceu a uma Organização Não Governamental (ONG) de acolhimento institucional para idosos após receber denúncia de que os prontuários de acompanhamento técnico social estavam sendo elaborados e assinados por uma estagiária do curso de pedagogia sem supervisão técnica. O diretor administrativo da ONG barrou a entrada da fiscal, alegando que a instituição possui natureza puramente privada, não recebe recursos públicos e que os prontuários dos internos são protegidos por sigilo institucional absoluto inviolável. Com base na Lei nº 8.662/1993:",
+        options: [
+          { key: "A", text: "O diretor administrativo tem razão jurídica, pois a fiscalização profissional de autarquias federais alcança exclusivamente órgãos da administração pública direta ou indireta.", isCorrect: false },
+          { key: "B", text: "A agente fiscal possui parcial razão, podendo fiscalizar apenas se portar um mandado de busca judicial expedido por juiz federal da seção judiciária correspondente.", isCorrect: false },
+          { key: "C", text: "O CRESS tem a prerrogativa legal de fiscalizar o exercício profissional de assistente social em qualquer entidade pública ou privada, sendo a fiscalização do exercício uma atribuição institucional.", isCorrect: true },
+          { key: "D", text: "A barreira à fiscalização é legítima, pois o sigilo de prontuários médicos e pedagógicos sobrepõe-se à jurisdição fiscalizatória dos Conselhos de Serviço Social de forma estrita.", isCorrect: false },
+          { key: "E", text: "A fiscalização só é cabível se a ONG possuir contratado em sua folha de pagamento pelo menos um profissional com cargo formalmente registrado sob a sigla C.B.O. de assistente social.", isCorrect: false }
+        ],
+        hint: "O sistema CFESS/CRESS é uma autarquia federal que atua sob delegação do poder público na fiscalização da profissão. Verifique o Art. 5º, Inciso XI, e as atribuições institucionais de fiscalização.",
+        rationale: "De acordo com o Art. 5º, Inciso XI da Lei nº 8.662/1993, 'fiscalizar o exercício profissional através dos Conselhos Federal e Regionais' constitui atribuição privativa da categoria de Serviço Social, executada pelo sistema regulamentador CFESS/CRESS. A fiscalização profissional é um poder-dever de direito público que abrange qualquer estabelecimento onde se desenvolvam atividades de Serviço Social, sejam públicos ou privados."
+      },
+      {
+        id: 12,
+        topic: "Elaboração de Provas de Concurso Público",
+        enunciado: "Uma banca organizadora de concursos públicos contratou um psicólogo social doutor e especialista em políticas públicas para elaborar a prova objetiva e os critérios de correção da prova discursiva técnica voltadas especificamente ao provimento do cargo de Assistente Social de uma autarquia de saúde estadual. O CRESS contestou formalmente a contratação, alegando usurpação de prerrogativa profissional regulamentada. Considerando a legislação profissional do Serviço Social, assinale a opção correta quanto ao questionamento do CRESS:",
+        options: [
+          { key: "A", text: "A contestação é improcedente, já que a elaboração de questões de múltipla escolha para concursos públicos constitui atividade intelectual genérica e livre a qualquer acadêmico de nível doutoral.", isCorrect: false },
+          { key: "B", text: "O psicólogo pode elaborar a prova desde que a validação final das questões de legislação previdenciária e do SUS seja assinada por um administrador de hospitais credenciado.", isCorrect: false },
+          { key: "C", text: "A banca está correta porque a avaliação teórica de conhecimentos gerais e de saúde pública de candidatos não constitui objeto de reserva de mercado técnica do Serviço Social.", isCorrect: false },
+          { key: "D", text: "A contestação é procedente, pois elaborar provas, presidir e compor bancas de exames onde sejam aferidos conhecimentos inerentes ao Serviço Social constitui atribuição privativa do assistente social.", isCorrect: true },
+          { key: "E", text: "A contestação é procedente, no entanto, a lei prevê que tal atribuição pode ser exercida por equipe multiprofissional, desde que liderada por um pedagogo especialista em avaliação.", isCorrect: false }
+        ],
+        hint: "A quem cabe aferir competências específicas em provas e exames de seleção para a categoria? Atente-se ao Art. 5º, Inciso IX.",
+        rationale: "Conforme o Art. 5º, Inciso IX, da Lei nº 8.662/1993, constitui atribuição privativa do assistente social 'elaborar provas, presidir e compor bancas de exames e comissões julgadoras de concursos ou outras formas de seleção para Assistentes Sociais, ou onde sejam aferidos conhecimentos inerentes ao Serviço Social'. Portanto, a elaboração das provas específicas do cargo por um psicólogo é ilegal."
+      },
+      {
+        id: 13,
+        topic: "Orientação Social e Encaminhamento",
+        enunciado: "Em um Centro de Atenção Psicossocial (CAPS) estadual, uma enfermeira integra a equipe multiprofissional responsável pelo acolhimento de novos pacientes com sofrimento psíquico decorrente do uso de substâncias psicoativas. Ao identificar que a família de um paciente se encontrava em extrema exclusão social e sem alimentação básica, a enfermeira prestou orientação direta sobre o fluxo de atendimento municipal e preencheu uma guia de encaminhamento oficial para que eles comparecessem ao Centro de Referência de Assistência Social (CRAS) a fim de obter cesta básica e o benefício emergencial. O assistente social do CAPS alegou que a conduta violou sua exclusividade profissional por se tratar de orientação social e encaminhamento. À luz da Lei nº 8.662/1993:",
+        options: [
+          { key: "A", text: "A alegação do assistente social procede, visto que toda e qualquer orientação de caráter comunitário e o ato de encaminhamento social são de reserva privativa do assistente social.", isCorrect: false },
+          { key: "B", text: "A conduta da enfermeira é legítima, pois encaminhar providências e prestar orientação social a indivíduos e grupos são competências do assistente social e não atribuições privativas de caráter exclusivo.", isCorrect: true },
+          { key: "C", text: "A alegação procede em parte, pois a enfermeira poderia prestar a orientação de saúde mental, mas o encaminhamento burocrático de providências sociais é restrito a bacharéis inscritos no CRESS.", isCorrect: false },
+          { key: "D", text: "A conduta foi irregular, haja vista que a legislação determina que orientações sobre fluxos de benefícios assistenciais de combate à fome necessitam de anuência prévia da chefia técnica do CRESS.", isCorrect: false },
+          { key: "E", text: "A alegação é improcedente unicamente porque a saúde pública opera sob regime de urgência, o que exime as equipes do cumprimento de restrições das leis de regulamentação profissional.", isCorrect: false }
+        ],
+        hint: "O ato de prestar orientações e encaminhar providências está inserido no rol do Art. 4º, Inciso III, como uma atividade geral no exercício profissional.",
+        rationale: "O Art. 4º, Inciso III, da Lei nº 8.662/1993 estabelece que constitui competência do assistente social 'encaminhar providências, e prestar orientação social a indivíduos, grupos e à população'. Sendo competência e não atribuição privativa, as ações de encaminhar demandas e fornecer orientações sociais podem ser compartilhadas com outros membros da equipe multiprofissional do serviço de saúde."
+      },
+      {
+        id: 14,
+        topic: "Coordenação de Congressos e Eventos",
+        enunciado: "Uma empresa de eventos corporativos organizou o 'I Congresso Regional sobre Práticas de Fortalecimento de Vínculos e Metodologias do Serviço Social'. Para coordenar as mesas de debate acadêmicas e selecionar as pesquisas científicas que seriam expostas, a empresa nomeou um experiente Bacharel em Relações Públicas, sob a premissa de que a gestão de congressos constitui atividade de comunicação social e relações institucionais. O CRESS local embargou a coordenação técnica das mesas científicas do evento. Diante das regras dispostas na Lei nº 8.662/1993, assinale a opção que reflete a legitimidade jurídica do CRESS:",
+        options: [
+          { key: "A", text: "O embargo é ilegítimo, uma vez que a coordenação de simpósios e palestras constitui ato de livre expressão do pensamento e atividade de difusão informativa geral não regulada por autarquias.", isCorrect: false },
+          { key: "B", text: "A empresa de eventos agiu corretamente, bastando que as atas de presença dos participantes fossem rubricadas por um assistente social devidamente registrado na subseção municipal.", isCorrect: false },
+          { key: "C", text: "O CRESS tem parcial razão apenas se o evento recebesse patrocínio direto do Ministério do Desenvolvimento Social, caso em que o gestor acadêmico deveria possuir dupla titulação.", isCorrect: false },
+          { key: "D", text: "O profissional de relações públicas está legalmente habilitado a coordenar painéis e mesas técnicas de Serviço Social, desde que os painelistas convidados tenham registro profissional regularizado.", isCorrect: false },
+          { key: "E", text: "O embargo é legítimo, pois coordenar seminários, encontros, congressos e eventos assemelhados sobre assuntos de Serviço Social constitui atribuição privativa do assistente social.", isCorrect: true }
+        ],
+        hint: "Observe a especificidade do tema do congresso e compare com o Artigo 5º, Inciso X, que disciplina a coordenação de fóruns de debate sobre a área profissional.",
+        rationale: "O Art. 5º, Inciso X, da Lei nº 8.662/1993 define como atribuição privativa do assistente social 'coordenar seminários, encontros, congressos e eventos assemelhados sobre assuntos de Serviço Social'. Por se tratar de um evento científico focado especificamente em 'Metodologias do Serviço Social', a coordenação técnica acadêmica deve obrigatoriamente ser exercida por assistente social."
+      },
+      {
+        id: 15,
+        topic: "Direção de Setor Técnico de Serviço Social",
+        enunciado: "A diretoria geral de um hospital de grande porte decidiu promover um processo de reestruturação administrativa. O setor de Serviço Social, que conta com dez assistentes sociais em seu quadro técnico, teve sua chefia unificada com a Divisão de Internações Administrativas. A diretoria nomeou uma enfermeira com pós-graduação em gestão hospitalar para exercer a chefia de todo o bloco unificado, passando a ser a responsável por supervisionar a assiduidade e a produtividade técnica dos assistentes sociais, bem como assinar os relatórios de gestão do setor social. Diante do que preconiza a Lei nº 8.662/1993:",
+        options: [
+          { key: "A", text: "A nomeação é ilegal, visto que dirigir órgãos, unidades, divisões e setores de Serviço Social, assim como chefiar seus departamentos e seções, constitui atribuição privativa do assistente social.", isCorrect: true },
+          { key: "B", text: "O hospital está respaldado legalmente, dado que a gerência administrativa global de blocos unificados em saúde privada de fins lucrativos é livre e imune à fiscalização do CRESS.", isCorrect: false },
+          { key: "C", text: "A chefia do setor por profissional de outra área é lícita, desde que o assistente social mais antigo da equipe atue como revisor dos atos e emita parecer ético-profissional sem subordinação.", isCorrect: false },
+          { key: "D", text: "A nomeação é legal porque o assistente social possui autonomia técnica e de consciência, o que torna irrelevante a profissão de seu superior hierárquico na estrutura administrativa do hospital.", isCorrect: false },
+          { key: "E", text: "A enfermeira pode gerir as escalas de trabalho e assinar os relatórios, contanto que se abstenha de opinar nos casos clínicos e não exija o registro das atividades no prontuário eletrônico unificado.", isCorrect: false }
+        ],
+        hint: "A chefia e coordenação direta de um grupo ou setor técnico dedicado ao Serviço Social envolve subordinação e avaliação de atos técnicos. Atente-se ao Art. 5º, Incisos VII e VIII.",
+        rationale: "De acordo com o Art. 5º, Incisos VII, VIII e XII, da Lei nº 8.662/1993, constituem atribuições privativas do assistente social dirigir e coordenar Unidades e Cursos, chefiar departamentos, serviços e setores de Serviço Social, e dirigir serviços técnicos de Serviço Social em entidades públicas ou privadas. Desse modo, o cargo de coordenação de um setor específico de Serviço Social não pode ser exercido por profissional de outra categoria."
+      },
+      {
+        id: 16,
+        topic: "Infrações e Sanções Disciplinares",
+        enunciado: "Um assistente social contratado por uma secretaria municipal foi denunciado ao CRESS sob a acusação de emitir parecer técnico social manifestamente falso para beneficiar parentes em um programa de moradia popular. Após o devido processo legal no Conselho ético, o profissional foi penalizado com a suspensão do exercício profissional por 12 meses. O assistente social recorreu ao poder judiciário comum alegando que, por exercer cargo estatutário público municipal estável e gozar de liberdade do trabalho assegurada constitucionalmente, o conselho de classe de natureza autárquica não dispõe de poder jurídico para impedi-lo de trabalhar e exercer suas funções na prefeitura. Diante do regime jurídico da Lei nº 8.662/1993:",
+        options: [
+          { key: "A", text: "O profissional está correto, pois os conselhos profissionais têm autoridade restrita ao setor corporativo privado, não alcançando o servidor público que responde à corregedoria do município.", isCorrect: false },
+          { key: "B", text: "A penalidade é nula, haja vista que a suspensão do registro profissional só pode ser determinada por sentença de juiz penal no âmbito de processo por crime contra a administração pública.", isCorrect: false },
+          { key: "C", text: "O CRESS detém a competência legal de aplicar sanções disciplinares, e a suspensão do registro profissional obstaculiza legitimamente o exercício de atividades inerentes ao Serviço Social em qualquer esfera.", isCorrect: true },
+          { key: "D", text: "A suspensão é ilegal, contudo o CRESS poderia aplicar multa pecuniária e cassação honorífica do título acadêmico de bacharel, mantendo-se a permissão de trabalho na prefeitura.", isCorrect: false },
+          { key: "E", text: "O conselho profissional só possui legitimidade para punir desvios éticos se o assistente social atuar como autônomo, não havendo submissão funcional de servidores municipais à autarquia previdenciária.", isCorrect: false }
+        ],
+        hint: "Conselhos de fiscalização possuem delegação de poder de polícia administrativa do Estado. Relembre o papel regulatório do sistema CFESS/CRESS.",
+        rationale: "O sistema CFESS/CRESS é instituído sob a forma de autarquia pública de fiscalização profissional com poder outorgado para disciplinar e punir desvios no exercício da profissão. Conforme a Lei nº 8.662/1993, a suspensão do registro aplicada pelo órgão impede legalmente o profissional de realizar qualquer ato técnico típico e privativo do Serviço Social, independente de o vínculo do profissional ser celetista, estatutário ou autônomo."
+      },
+      {
+        id: 17,
+        topic: "Gestão Financeira em Órgãos de Representação",
+        enunciado: "Durante o processo eleitoral para composição da diretoria executiva de um Conselho Regional de Serviço Social (CRESS), uma chapa concorrente registrou para o cargo de Tesoureiro-Geral (Diretoria de Gestão Financeira) um renomado Contador público, especialista em finanças do terceiro setor, sob o argumento de que a função exige notórios conhecimentos contábeis de auditoria e balanço patrimonial, ausentes no currículo acadêmico de formação do assistente social. A comissão eleitoral indeferiu o registro do candidato contador para a vaga de diretoria financeira. À luz da Lei nº 8.662/1993, a decisão da comissão eleitoral é:",
+        options: [
+          { key: "A", text: "Incorreta, visto que as normas federais exigem apenas que o Presidente do conselho de fiscalização possua graduação específica em Serviço Social, liberando-se as diretorias técnicas.", isCorrect: false },
+          { key: "B", text: "Incorreta, haja vista que a contabilidade pública constitui competência exclusiva de bacharéis em Ciências Contábeis, configurando usurpação de profissão o assistente social gerir finanças.", isCorrect: false },
+          { key: "C", text: "Correta, contanto que o contador concorra como secretário acadêmico adjunto, posto reservado a profissionais de apoio técnico conforme deliberado em assembleia de plenária do CFESS.", isCorrect: false },
+          { key: "D", text: "Incorreta, porque o CRESS é mantido com taxas de contribuição compulsória de empresas, o que atrai a obrigatoriedade de diretores financeiros com registro ativo no Conselho de Contabilidade.", isCorrect: false },
+          { key: "E", text: "Correta, pois ocupar cargos e funções de direção e fiscalização da gestão financeira em órgãos de representação da categoria profissional constitui atribuição privativa do assistente social.", isCorrect: true }
+        ],
+        hint: "Quem pode administrar os recursos públicos arrecadados pelas anuidades dos profissionais e geridos pelas entidades da categoria? Verifique o Artigo 5º, Inciso XIII.",
+        rationale: "O Art. 5º, Inciso XIII, da Lei nº 8.662/1993 preceitua como atribuição privativa do assistente social 'ocupar cargos e funções de direção e fiscalização da gestão financeira em órgãos e entidades representativas da categoria profissional'. Logo, apenas assistentes sociais regularmente inscritos podem ocupar cargos de tesouraria ou diretoria financeira nos CRESS e no CFESS."
+      },
+      {
+        id: 18,
+        topic: "Pesquisa Social e Análise de Realidade",
+        enunciado: "Um instituto estadual de pesquisa econômica e planejamento estatístico foi contratado para produzir um grande diagnóstico situacional sobre as condições de vulnerabilidade e extrema pobreza das famílias residentes nas periferias urbanas de uma região metropolitana. Para a execução técnica da pesquisa, tabulação de dados estatísticos e redação das análises interpretativas finais sobre a dinâmica social observada, o instituto designou uma equipe composta exclusivamente por geógrafos, sociólogos e estatísticos. O CRESS local autuou a instituição por infração à lei regulamentadora, sustentando que realizar pesquisas para subsidiar ações governamentais de vulnerabilidade social é uma atribuição privativa de assistente social. De acordo com a Lei nº 8.662/1993, a atuação do CRESS:",
+        options: [
+          { key: "A", text: "Está correta, visto que qualquer estudo empírico focado na realidade de famílias empobrecidas constitui atribuição privativa da categoria, vedada a participação de profissionais de estatística.", isCorrect: false },
+          { key: "B", text: "Está incorreta, pois planejar, executar e avaliar pesquisas que contribuam para a análise da realidade social e subsidiem ações profissionais constitui competência do assistente social e não atribuição privativa.", isCorrect: true },
+          { key: "C", text: "Está correta, uma vez que a lei federal nº 8.662/1993 proíbe de forma taxativa a atuação de sociólogos em diagnósticos que auxiliem na implementação de programas de assistência governamentais.", isCorrect: false },
+          { key: "D", text: "Está incorreta, pois a pesquisa científica goza de imunidade tributária e fiscalizatória por força da constituição, de modo que o CRESS não dispõe de qualquer prerrogativa de autuar institutos privados.", isCorrect: false },
+          { key: "E", text: "Está correta em parte, pois a elaboração das perguntas do questionário de pesquisa é privativa do assistente social, restando aos demais a tabulação de planilhas e mapas temáticos.", isCorrect: false }
+        ],
+        hint: "Pesquisar a realidade e as mazelas sociais é um direito comum a várias ciências sociais. Atente-se ao teor do Art. 4º, Inciso VII.",
+        rationale: "Conforme o Art. 4º, Inciso VII da Lei nº 8.662/1993, constitui competência do assistente social 'planejar, executar e avaliar pesquisas que possam contribuir para a análise da realidade social e para subsidiar ações profissionais'. Tratando-se de competência, a atividade de pesquisa empírica geral sobre a realidade social não é exclusiva (privativa) do assistente social, podendo ser conduzida legitimamente por profissionais de outras áreas correlatas."
+      },
+      {
+        id: 19,
+        topic: "Assessoria a Movimentos Sociais",
+        enunciado: "Um movimento popular organizado que luta por moradia digna nas grandes metrópoles nacionais decidiu contratar um bacharel em História e Direito Constitucional para prestar assessoria jurídica e apoio técnico estratégico na organização de suas assembleias, com o escopo de embasar a reivindicação de políticas de habitação popular e garantia de direitos coletivos. Diante disso, o CRESS local emitiu parecer de orientação alertando o movimento de que o apoio estratégico e assessoria técnica a movimentos populares em matéria de direitos civis e sociais constitui uma atividade privativa restrita a assistentes sociais inscritos. À luz da Lei nº 8.662/1993, o parecer do CRESS está fundamentado?",
+        options: [
+          { key: "A", text: "Sim, pois prestar assessoria e consultoria aos movimentos populares sobre as demandas de moradia é atribuição privativa descrita expressamente no artigo 5º da regulamentação.", isCorrect: false },
+          { key: "B", text: "Não, pois os movimentos populares gozam de imunidade jurídica absoluta de contratação, sendo vedada a fiscalização de suas assessorias internas por conselhos autárquicos federais.", isCorrect: false },
+          { key: "C", text: "Sim, desde que a remuneração do historiador seja custeada com verbas oriundas de fundos partidários de assistência social ou convênios de fomento com órgãos municipais de habitação.", isCorrect: false },
+          { key: "D", text: "Não, haja vista que prestar assessoria e apoio aos movimentos sociais em matéria de políticas sociais e defesa de direitos constitui competência do assistente social, permitindo a atuação de outras áreas.", isCorrect: true },
+          { key: "E", text: "Sim, pois o assessoramento a conselhos de moradores envolve a expedição de laudos sociais e vistorias ambientais de loteamentos urbanos, atividades privativas de Serviço Social de nível técnico.", isCorrect: false }
+        ],
+        hint: "Apoiar a organização de movimentos sociais e populares na defesa de direitos é uma atividade política e técnica compartilhada. Verifique o Art. 4º, Inciso IX.",
+        rationale: "O Art. 4º, Inciso IX, da Lei nº 8.662/1993 prevê que constitui competência do assistente social 'prestar assessoria e apoio aos movimentos sociais em matéria relacionada às políticas sociais, no exercício e na defesa dos direitos civis, políticos e sociais da coletividade'. Como se trata de competência (Art. 4º) e não atribuição privativa (Art. 5º), o movimento popular é livre para contratar profissionais de outras formações para prestar-lhes assessoramento e orientação organizativa."
+      },
+      {
+        id: 20,
+        topic: "Exercício por Pessoa Jurídica",
+        enunciado: "Uma empresa de consultoria e auditoria em saúde privada foi contratada por um plano de saúde corporativo para fornecer pareceres técnicos periciais e relatórios de auditoria acerca da legalidade e viabilidade da cobertura domiciliar (Home Care) de segurados acometidos por vulnerabilidades crônicas. Nenhum dos sócios-diretores da empresa de auditoria possui graduação em Serviço Social. Para emitir e assinar os pareceres periciais exigidos pela contratante, a empresa contratou assistentes sociais prestadores de serviços autônomos temporários. Diante das regras de fiscalização profissional do sistema CFESS/CRESS:",
+        options: [
+          { key: "A", text: "A empresa de auditoria está em situação irregular, pois as pessoas jurídicas que prestam serviços de assessoria e perícia em matéria de Serviço Social devem registrar-se obrigatoriamente no CRESS.", isCorrect: true },
+          { key: "B", text: "A atuação da empresa é lícita, já que a obrigatoriedade de registro e regularização junto às autarquias profissionais alcança única e estritamente as pessoas físicas dos assistentes sociais contratados.", isCorrect: false },
+          { key: "C", text: "O registro é dispensável porque as perícias técnicas periciais em plano de saúde constituem competência residual de auditores médicos e enfermeiros especializados em controle administrativo.", isCorrect: false },
+          { key: "D", text: "A irregularidade se restringe ao fato de a empresa não possuir em seu quadro societário de acionistas controladores pelo menos um terapeuta ocupacional devidamente inscrito e portador de título.", isCorrect: false },
+          { key: "E", text: "A situação está regular, contanto que as perícias domiciliares e laudos conclusivos de alta complexidade do plano corporativo recebam homologação anual pelo Conselho Municipal de Saúde.", isCorrect: false }
+        ],
+        hint: "Pessoas jurídicas que comercializam, prestam assessoria ou executam serviços específicos e privativos de Serviço Social também se sujeitam ao controle fiscalizatório. Lembre-se das resoluções normativas e regras de registro de entidades.",
+        rationale: "De acordo com o marco normativo decorrente da Lei nº 8.662/1993 e regulamentação complementar do CFESS (Resolução CFESS nº 512/2007), as pessoas jurídicas que prestam, sob qualquer forma, serviços de assessoria, consultoria, perícia ou planejamento em matéria de Serviço Social estão sujeitas à inscrição e fiscalização obrigatórias nos CRESS de suas respectivas jurisdições. A mera terceirização pontual de profissionais autônomos sem o registro cadastral da empresa prestadora configura infração administrativa."
+      }
+    ];
+
+    // Estado Geral da Aplicação
+    let currentMode = 'interactive'; // 'interactive' ou 'print'
+    let userAnswers = {}; // Guarda as respostas dadas no modo interativo {questaoId: "A"}
+
+    // Inicialização do Web App
+    window.onload = function() {
+      generateSidebarGrid();
+      renderQuestions();
+      updateStats();
+    };
+
+    // Gera a grade de botões numéricos na barra lateral de navegação
+    function generateSidebarGrid() {
+      const grid = document.getElementById('grid-nav');
+      grid.innerHTML = '';
+      for (let i = 1; i <= 20; i++) {
+        const btn = document.createElement('button');
+        btn.id = `nav-btn-${i}`;
+        btn.textContent = String(i).padStart(2, '0');
+        btn.className = `h-10 text-xs font-bold rounded-lg border border-slate-200 transition-all text-slate-600 bg-slate-50 hover:bg-indigo-50 hover:text-indigo-600 flex items-center justify-center`;
+        btn.onclick = () => scrollToQuestion(i);
+        grid.appendChild(btn);
+      }
+    }
+
+    // Navega suavemente para a questão correspondente
+    function scrollToQuestion(id) {
+      const element = document.getElementById(`question-card-${id}`);
+      if (element) {
+        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        // Adiciona um efeito temporário de destaque/piscar no card
+        element.classList.add('ring-2', 'ring-indigo-500', 'ring-offset-2');
+        setTimeout(() => {
+          element.classList.remove('ring-2', 'ring-indigo-500', 'ring-offset-2');
+        }, 1500);
+      }
+    }
+
+    // Altera entre Modo Interativo e Modo Estudo/Impressão
+    function switchMode(mode) {
+      currentMode = mode;
+      
+      const btnInteractive = document.getElementById('btn-mode-interactive');
+      const btnPrint = document.getElementById('btn-mode-print');
+      const statsBar = document.getElementById('stats-bar');
+      const sidebar = document.getElementById('sidebar-navigation');
+      const reviewSection = document.getElementById('review-section');
+
+      if (mode === 'interactive') {
+        // Estilização Botões
+        btnInteractive.className = "flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 bg-white text-indigo-950 shadow-sm";
+        btnPrint.className = "flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 transition-all duration-200 hover:text-slate-900";
+        
+        // Exibição Elementos
+        statsBar.classList.remove('opacity-25', 'pointer-events-none');
+        sidebar.classList.remove('hidden');
+        sidebar.classList.add('block');
+        reviewSection.classList.add('hidden'); // Oculta o gabarito corrido
+      } else {
+        // Estilização Botões
+        btnInteractive.className = "flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold text-slate-600 transition-all duration-200 hover:text-slate-900";
+        btnPrint.className = "flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-200 bg-white text-indigo-950 shadow-sm";
+        
+        // Exibição Elementos
+        statsBar.classList.add('opacity-25', 'pointer-events-none');
+        sidebar.classList.add('hidden');
+        sidebar.classList.remove('block');
+        reviewSection.classList.remove('hidden'); // Exibe gabarito & comentários corridos ao final
+        generatePrintGabarito();
+        renderComentarios();
+      }
+
+      renderQuestions();
+    }
+
+    // Renderiza a lista de questões dinamicamente conforme o modo selecionado
+    function renderQuestions() {
+      const container = document.getElementById('questions-area');
+      container.innerHTML = '';
+
+      questionsData.forEach(q => {
+        const card = document.createElement('div');
+        card.id = `question-card-${q.id}`;
+        card.className = `bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden p-6 md:p-8 transition-all duration-300`;
+
+        // Cabeçalho da Questão
+        let headerHtml = `
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-4">
+            <span class="text-xs font-extrabold uppercase tracking-widest text-indigo-600 bg-indigo-50 px-2.5 py-1 rounded-md">
+              Questão ${String(q.id).padStart(2, '0')} — ${q.topic}
+            </span>
+            <div class="flex gap-2">
+              <span class="text-[10px] font-bold bg-slate-100 text-slate-600 px-2 py-0.5 rounded uppercase">Dificuldade: Difícil</span>
+              <span class="text-[10px] font-bold bg-amber-500/10 text-amber-700 px-2 py-0.5 rounded uppercase">Lei 8.662/93</span>
+            </div>
+          </div>
+        `;
+
+        // Enunciado
+        const enunciadoHtml = `
+          <p class="text-slate-700 font-medium text-sm md:text-base leading-relaxed mb-6 whitespace-pre-line text-justify">
+            ${q.enunciado}
+          </p>
+          <div class="text-xs font-bold text-slate-900 border-l-4 border-amber-500 pl-3 py-1 bg-slate-50 mb-6 rounded-r">
+            CONSIDERANDO A LEI Nº 8.662/1993, ASSINALE A ALTERNATIVA CORRETA:
+          </div>
+        `;
+
+        // Alternativas
+        let optionsHtml = `<div class="space-y-3 mb-6">`;
+        q.options.forEach(opt => {
+          let optClass = "border border-slate-200 hover:border-slate-300 hover:bg-slate-50 cursor-pointer text-slate-700";
+          let badgeColor = "bg-slate-100 text-slate-700 group-hover:bg-indigo-600 group-hover:text-white";
+          let iconHtml = '';
+
+          // Lógica Visual para Modo Interativo após responder
+          if (currentMode === 'interactive' && userAnswers[q.id]) {
+            const isSelected = userAnswers[q.id] === opt.key;
+            if (opt.isCorrect) {
+              optClass = "border-2 border-emerald-500 bg-emerald-50/50 text-emerald-950 font-medium pointer-events-none";
+              badgeColor = "bg-emerald-500 text-white";
+              iconHtml = `<i class="fa-solid fa-circle-check text-emerald-600 ml-auto text-lg"></i>`;
+            } else if (isSelected && !opt.isCorrect) {
+              optClass = "border-2 border-rose-500 bg-rose-50/50 text-rose-950 pointer-events-none";
+              badgeColor = "bg-rose-500 text-white";
+              iconHtml = `<i class="fa-solid fa-circle-xmark text-rose-600 ml-auto text-lg"></i>`;
+            } else {
+              optClass = "border border-slate-200 text-slate-400 opacity-65 pointer-events-none";
+              badgeColor = "bg-slate-100 text-slate-400";
+            }
+          } 
+          // Lógica Visual para Modo Estudo/Impressão (Sempre mostra a correta em destaque)
+          else if (currentMode === 'print') {
+            if (opt.isCorrect) {
+              optClass = "border border-emerald-500 bg-emerald-50 text-emerald-950 font-medium pointer-events-none";
+              badgeColor = "bg-emerald-500 text-white";
+              iconHtml = `<i class="fa-solid fa-check text-emerald-600 ml-auto font-black"></i>`;
+            } else {
+              optClass = "border border-slate-200 text-slate-600 pointer-events-none";
+              badgeColor = "bg-slate-100 text-slate-500";
+            }
+          }
+
+          optionsHtml += `
+            <div onclick="selectOption(${q.id}, '${opt.key}')" class="group flex items-center gap-3 p-4 rounded-xl text-xs md:text-sm transition-all duration-200 ${optClass}">
+              <span class="w-7 h-7 flex-shrink-0 flex items-center justify-center font-bold text-xs rounded-lg transition-colors ${badgeColor}">
+                ${opt.key}
+              </span>
+              <span class="flex-grow text-justify pr-2">${opt.text}</span>
+              ${iconHtml}
+            </div>
+          `;
+        });
+        optionsHtml += `</div>`;
+
+        // Roda-pé: Dica e Rationale (Modo Interativo dinâmico)
+        let footerHtml = '';
+        if (currentMode === 'interactive') {
+          const respondida = userAnswers[q.id];
+          footerHtml = `
+            <div class="border-t border-slate-100 pt-4 flex flex-col gap-3">
+              <!-- Botão Dica -->
+              <div id="hint-wrapper-${q.id}" class="${respondida ? 'hidden' : ''}">
+                <button onclick="toggleHint(${q.id})" class="text-xs text-amber-600 hover:text-amber-700 font-bold flex items-center gap-1">
+                  <i class="fa-solid fa-circle-info"></i> Precisa de ajuda? Clique para ver uma dica de estudo
+                </button>
+                <p id="hint-text-${q.id}" class="hidden text-xs bg-amber-50 text-amber-800 border border-amber-200/50 p-3 rounded-lg mt-2 text-justify">
+                  <strong>Dica de Estudo:</strong> ${q.hint}
+                </p>
+              </div>
+
+              <!-- Rationale expandível após responder -->
+              <div id="rationale-${q.id}" class="${respondida ? 'block animate-fade-in' : 'hidden'} bg-indigo-50 border border-indigo-100 p-4 rounded-xl text-xs md:text-sm text-indigo-950 text-justify">
+                <p class="font-extrabold text-indigo-900 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+                  <i class="fa-solid fa-graduation-cap"></i> Análise Técnica do Gabarito:
+                </p>
+                <p class="leading-relaxed font-medium mb-2">${q.rationale}</p>
+                <div class="text-[11px] text-indigo-700 font-bold bg-white/65 px-3 py-1.5 rounded border border-indigo-100/40 w-fit">
+                  Gabarito Oficial: Letra ${q.options.find(o => o.isCorrect).key}
+                </div>
+              </div>
+            </div>
+          `;
+        } else {
+          // No modo impressão, os comentários ficam consolidados embaixo de cada questão ou compilados ao final.
+          // Vamos colocar o comentário direto abaixo do card de forma limpa.
+          footerHtml = `
+            <div class="border-t border-slate-100 pt-4 bg-slate-50 -mx-6 md:-mx-8 -mb-6 md:-mb-8 p-6">
+              <p class="font-extrabold text-slate-800 uppercase tracking-wider text-xs mb-2 flex items-center gap-1.5">
+                <i class="fa-solid fa-gavel text-amber-500"></i> Justificativa Jurídica da Questão:
+              </p>
+              <p class="text-xs md:text-sm text-slate-600 leading-relaxed text-justify mb-2">
+                ${q.rationale}
+              </p>
+              <span class="inline-block text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-1 rounded">
+                Fundamentação: Lei nº 8.662/1993 • Resposta Correta: Letra ${q.options.find(o => o.isCorrect).key}
+              </span>
+            </div>
+          `;
+        }
+
+        card.innerHTML = headerHtml + enunciadoHtml + optionsHtml + footerHtml;
+        container.appendChild(card);
+      });
+
+      // Atualiza a navegação da barra lateral
+      updateSidebarNav();
+    }
+
+    // Ação de escolher uma alternativa (Modo Interativo)
+    function selectOption(qId, selectedKey) {
+      if (currentMode !== 'interactive' || userAnswers[qId]) return;
+
+      userAnswers[qId] = selectedKey;
+      
+      // Atualiza os stats de acertos/erros
+      updateStats();
+      // Renderiza as mudanças na tela
+      renderQuestions();
+
+      // Checa se encerrou o simulado completo para exibir o gabarito final consolidado
+      if (Object.keys(userAnswers).length === 20) {
+        showFinalStatsBanner();
+      }
+    }
+
+    // Alterna a exibição da dica de estudo
+    function toggleHint(qId) {
+      const text = document.getElementById(`hint-text-${qId}`);
+      if (text) {
+        text.classList.toggle('hidden');
+      }
+    }
+
+    // Calcula e atualiza as estatísticas de acerto/erro
+    function updateStats() {
+      const totalAnswered = Object.keys(userAnswers).length;
+      let totalCorrect = 0;
+      let totalWrong = 0;
+
+      questionsData.forEach(q => {
+        if (userAnswers[q.id]) {
+          if (userAnswers[q.id] === q.options.find(o => o.isCorrect).key) {
+            totalCorrect++;
+          } else {
+            totalWrong++;
+          }
+        }
+      });
+
+      document.getElementById('stat-answered').textContent = totalAnswered;
+      document.getElementById('stat-correct').textContent = totalCorrect;
+      document.getElementById('stat-wrong').textContent = totalWrong;
+
+      // Progresso Barra Lateral
+      const percent = totalAnswered > 0 ? Math.round((totalAnswered / 20) * 100) : 0;
+      const progressB = document.getElementById('nav-progress-bar');
+      const progressT = document.getElementById('nav-percent');
+      if (progressB && progressT) {
+        progressB.style.width = `${percent}%`;
+        progressT.textContent = `${percent}%`;
+      }
+    }
+
+    // Atualiza o estado visual dos botões na barra lateral
+    function updateSidebarNav() {
+      for (let i = 1; i <= 20; i++) {
+        const btn = document.getElementById(`nav-btn-${i}`);
+        if (!btn) continue;
+
+        if (userAnswers[i]) {
+          const q = questionsData.find(quest => quest.id === i);
+          const correctKey = q.options.find(o => o.isCorrect).key;
+          if (userAnswers[i] === correctKey) {
+            // Correto
+            btn.className = `h-10 text-xs font-bold rounded-lg border border-emerald-200 text-white bg-emerald-500 hover:bg-emerald-600 flex items-center justify-center shadow-sm`;
+          } else {
+            // Incorreto
+            btn.className = `h-10 text-xs font-bold rounded-lg border border-rose-200 text-white bg-rose-500 hover:bg-rose-600 flex items-center justify-center shadow-sm`;
+          }
+        } else {
+          // Não Respondido
+          btn.className = `h-10 text-xs font-bold rounded-lg border border-slate-200 text-slate-600 bg-slate-50 hover:bg-indigo-50 hover:text-indigo-600 flex items-center justify-center`;
+        }
+      }
+    }
+
+    // Reinicia as respostas e o simulado
+    function resetQuiz() {
+      if (confirm("Deseja realmente limpar as respostas dadas e recomeçar o simulado do zero?")) {
+        userAnswers = {};
+        updateStats();
+        // Garante que volte ao interativo limpo
+        switchMode('interactive');
+        // Fecha banner de resultado se existir
+        const alertBanner = document.getElementById('alert-result');
+        if (alertBanner) alertBanner.remove();
+      }
+    }
+
+    // Exibe banner de encerramento do simulado
+    function showFinalStatsBanner() {
+      const container = document.getElementById('questions-area');
+      
+      let totalCorrect = 0;
+      questionsData.forEach(q => {
+        if (userAnswers[q.id] === q.options.find(o => o.isCorrect).key) {
+          totalCorrect++;
+        }
+      });
+
+      const aproveitamento = Math.round((totalCorrect / 20) * 100);
+
+      // Remove se já existia
+      const oldBanner = document.getElementById('alert-result');
+      if (oldBanner) oldBanner.remove();
+
+      const banner = document.createElement('div');
+      banner.id = "alert-result";
+      banner.className = "bg-gradient-to-r from-slate-950 via-indigo-950 to-slate-950 border-2 border-amber-500 p-6 md:p-8 rounded-2xl shadow-xl text-center text-white mb-8";
+      
+      let feedbackMsg = "";
+      if (aproveitamento >= 85) {
+        feedbackMsg = "🏆 Desempenho Excepcional! Você demonstra domínio absoluto das normas do Serviço Social.";
+      } else if (aproveitamento >= 70) {
+        feedbackMsg = "⚡ Excelente aproveitamento! Você está no caminho ideal para a aprovação em editais complexos.";
+      } else {
+        feedbackMsg = "📖 Continue estudando! Use os comentários técnicos das questões para reforçar seus conhecimentos legislativos.";
+      }
+
+      banner.innerHTML = `
+        <h3 class="text-2xl font-black text-amber-400 mb-2">🎉 SIMULADO CONCLUÍDO!</h3>
+        <p class="text-sm text-slate-300 font-medium mb-6">${feedbackMsg}</p>
+        <div class="grid grid-cols-3 gap-4 max-w-md mx-auto mb-6">
+          <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+            <span class="block text-2xl font-black text-emerald-400">${totalCorrect}</span>
+            <span class="text-[10px] uppercase font-bold text-slate-400">Acertos</span>
+          </div>
+          <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+            <span class="block text-2xl font-black text-rose-400">${20 - totalCorrect}</span>
+            <span class="text-[10px] uppercase font-bold text-slate-400">Erros</span>
+          </div>
+          <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+            <span class="block text-2xl font-black text-amber-400">${aproveitamento}%</span>
+            <span class="text-[10px] uppercase font-bold text-slate-400">Aproveitamento</span>
+          </div>
+        </div>
+        <button onclick="switchMode('print')" class="bg-amber-500 hover:bg-amber-600 text-slate-950 text-xs font-black uppercase tracking-wider px-6 py-3 rounded-xl transition-all shadow-md">
+          Ver Gabarito Completo & Comentários
+        </button>
+      `;
+
+      // Insere o banner no início do container de perguntas
+      container.insertBefore(banner, container.firstChild);
+      banner.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    // Gera a tabela estática de gabarito para impressão
+    function generatePrintGabarito() {
+      const grid = document.getElementById('gabarito-grid');
+      grid.innerHTML = '';
+
+      questionsData.forEach(q => {
+        const correctKey = q.options.find(o => o.isCorrect).key;
+        const col = document.createElement('div');
+        col.className = "flex flex-col items-center bg-slate-50 p-2.5 rounded-lg border border-slate-200 shadow-sm";
+        col.innerHTML = `
+          <span class="text-[10px] font-extrabold text-slate-500 uppercase">Q${q.id}</span>
+          <span class="text-sm font-black text-indigo-950 mt-1">${correctKey}</span>
+        `;
+        grid.appendChild(col);
+      });
+    }
+
+    // Renderiza a lista corrida de comentários no final (Modo Impressão)
+    function renderComentarios() {
+      const area = document.getElementById('comentarios-area');
+      area.innerHTML = '';
+
+      questionsData.forEach(q => {
+        const correctKey = q.options.find(o => o.isCorrect).key;
+        const box = document.createElement('div');
+        box.className = "p-5 bg-slate-50 rounded-xl border border-slate-200 text-justify";
+        
+        box.innerHTML = `
+          <h4 class="font-bold text-slate-900 text-sm md:text-base mb-2">
+            Questão ${String(q.id).padStart(2, '0')} — <span class="text-indigo-600">${q.topic}</span>
+          </h4>
+          <p class="text-xs md:text-sm text-slate-600 leading-relaxed mb-3">
+            ${q.rationale}
+          </p>
+          <div class="flex flex-wrap gap-2 text-[10px] font-bold">
+            <span class="bg-indigo-100 text-indigo-700 px-2 py-1 rounded">Gabarito Oficial: Letra ${correctKey}</span>
+            <span class="bg-emerald-100 text-emerald-800 px-2 py-1 rounded">Fundamento Legal: Lei nº 8.662/1993</span>
+          </div>
+        `;
+        area.appendChild(box);
+      });
+    }
+  </script>
+</body>
+</html>
